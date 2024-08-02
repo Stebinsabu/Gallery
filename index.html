@@ -21,10 +21,39 @@
             justify-content: center;
             margin: 1em 0;
         }
-        nav button {
-            margin: 0 1em;
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav li {
+            position: relative;
+        }
+        nav li a, nav li button {
             padding: 0.5em 1em;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
             cursor: pointer;
+        }
+        nav li button:hover, nav li a:hover {
+            background-color: #45a049;
+        }
+        nav li ul {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #4CAF50;
+            padding: 0;
+        }
+        nav li:hover ul {
+            display: block;
+        }
+        nav li ul li {
+            width: 100%;
         }
         .recipes {
             display: flex;
@@ -55,11 +84,19 @@
 </header>
 
 <nav>
-    <button onclick="filterRecipes('breakfast')">Breakfast</button>
-    <button onclick="filterRecipes('lunch')">Lunch</button>
-    <button onclick="filterRecipes('brunch')">Brunch</button>
-    <button onclick="filterRecipes('snacks')">Snacks</button>
-    <button onclick="filterRecipes('dinner')">Dinner</button>
+    <ul>
+        <li><button onclick="filterRecipes('all')">All</button></li>
+        <li>
+            <button>Meals</button>
+            <ul>
+                <li><a href="#" onclick="filterRecipes('breakfast')">Breakfast</a></li>
+                <li><a href="#" onclick="filterRecipes('lunch')">Lunch</a></li>
+            </ul>
+        </li>
+        <li><button onclick="filterRecipes('brunch')">Brunch</button></li>
+        <li><button onclick="filterRecipes('snacks')">Snacks</button></li>
+        <li><button onclick="filterRecipes('dinner')">Dinner</button></li>
+    </ul>
 </nav>
 
 <div class="filter">
@@ -97,19 +134,19 @@
     }
 
     function filterRecipes(category) {
-        const filteredRecipes = recipes.filter(recipe => recipe.category === category);
+        let filteredRecipes;
+        if (category === 'all') {
+            filteredRecipes = recipes;
+        } else {
+            filteredRecipes = recipes.filter(recipe => recipe.category === category);
+        }
         displayRecipes(filteredRecipes);
     }
 
     function applyTimeFilter() {
         const time = document.getElementById('time').value;
-        const currentCategory = document.querySelector('nav button.active');
         let filteredRecipes = recipes;
         
-        if (currentCategory) {
-            filteredRecipes = recipes.filter(recipe => recipe.category === currentCategory.textContent.toLowerCase());
-        }
-
         if (time) {
             filteredRecipes = filteredRecipes.filter(recipe => recipe.time <= time);
         }
@@ -117,8 +154,8 @@
         displayRecipes(filteredRecipes);
     }
 
-    // Set default category to 'breakfast'
-    filterRecipes('breakfast');
+    // Display all recipes by default
+    filterRecipes('all');
 </script>
 
 </body>
